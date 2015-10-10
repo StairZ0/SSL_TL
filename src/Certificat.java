@@ -76,5 +76,10 @@ public class Certificat {
 
 	}
 
+	public Certificat(X509Certificate certificate) {
+		seqnum=certificate.getSerialNumber();
+		x509 = certificate;
+	}
+
 
 }
