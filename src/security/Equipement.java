@@ -16,7 +16,6 @@ public class Equipement {
 		maCle=new PaireClesRSA();
 		monCert = new Certificat(nom, maCle, port);
 		monCert.x509.verify(maCle.Publique());
-		System.out.println(monCert.x509.toString());
 
 	}
 
