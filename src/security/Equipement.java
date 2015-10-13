@@ -53,5 +53,9 @@ public class Equipement {
 	{
 		return monCert;
 	}
+	public int monPort() 
+	{
+		return monPort;
+	}
 
 }
