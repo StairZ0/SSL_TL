@@ -76,6 +76,34 @@ public class Certificat {
 		
 
 	}
+	
+	public Certificat(String nom, PublicKey clePublique, PrivateKey clePrivee, int validityDays) throws CertificateEncodingException, InvalidKeyException, IllegalStateException, NoSuchProviderException, NoSuchAlgorithmException, SignatureException{
+		
+		PublicKey pubkey = clePublique;
+		PrivateKey privkey = clePrivee;
+		
+		X509V1CertificateGenerator certGen = new X509V1CertificateGenerator();
+		
+		Calendar expiry = Calendar.getInstance();
+		Date startDate = expiry.getTime();
+		expiry.add(Calendar.DAY_OF_YEAR, 10);
+		Date expiryDate = expiry.getTime();
+		certGen.setNotBefore(startDate);
+		certGen.setNotAfter(expiryDate);
+		
+		seqnum=seqnum.add(BigInteger.ONE);
+		certGen.setSerialNumber(seqnum);
+		
+		X500Principal cnName = new X500Principal("CN="+nom);
+		certGen.setSubjectDN(cnName);
+		certGen.setIssuerDN(cnName);
+	
+		certGen.setSignatureAlgorithm("sha1WithRSA");
+	
+		certGen.setPublicKey(pubkey);
+		
+		this.x509= certGen.generate(privkey, "BC");
+	}
 
 	public Certificat(X509Certificate certificate) {
 		seqnum=certificate.getSerialNumber();
