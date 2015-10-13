@@ -8,5 +8,7 @@
 			<attribute name="javadoc_location" value="file:/C:/Users/Alan/Documents/GitHub/SSL_TL/lib/javadoc_scr/bcpkix-jdk15on-152/javadoc/"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="lib/miglayout-4.0.jar"/>
+	<classpathentry kind="lib" path="lib/weblaf-complete-1.28 (1).jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
