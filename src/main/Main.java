@@ -9,6 +9,7 @@ import com.alee.laf.rootpane.WebFrame;
 import com.alee.utils.SwingUtils;
 
 import security.Equipement;
+import sockets.Server;
 
 
 public class Main {
@@ -37,7 +38,9 @@ public class Main {
 			
 		});
 		
-
+		Equipement e = new Equipement("Equipement1", 801);
+		Server s = new Server(e);
+		
 	}
 
 }

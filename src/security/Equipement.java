@@ -3,6 +3,9 @@ import java.security.PublicKey;
 import java.security.Security;
 import java.util.ArrayList;
 
+import sockets.Client;
+import sockets.Server;
+
 public class Equipement {
 
 
@@ -59,6 +62,31 @@ public class Equipement {
 	public int monPort() 
 	{
 		return monPort;
+	}
+	
+	public Server createServer(){
+		Server s = new Server(this);
+		s.createSocket();
+		s.waitConnections();
+		s.createStreams();
+		return s;
+	}
+	
+	public Client createClient(int port){
+		Client c = new Client(port, this.monNom);
+		c.createSocket();
+		c.createStreams();
+		return c;
+	}
+	
+	public void closeServer(Server s){
+		s.closeStreams();
+		s.closeConnection();
+	}
+	
+	public void closeClient(Client c){
+		c.closeStreams();
+		c.closeConnection();
 	}
 
 }

@@ -9,6 +9,7 @@ import javax.swing.BorderFactory;
 
 import net.miginfocom.swing.MigLayout;
 import security.Equipement;
+import sockets.Server;
 
 import com.alee.laf.button.WebButton;
 import com.alee.laf.label.WebLabel;
@@ -99,8 +100,8 @@ public class EquipmentPanel extends WebPanel {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				// TODO Auto-generated method stub
-				
+				console.clear();
+				eq.createServer();
 			}
 			
 		});
@@ -108,8 +109,9 @@ public class EquipmentPanel extends WebPanel {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				// TODO Auto-generated method stub
-				
+				console.clear();
+				int port = 0;
+				eq.createClient(port);
 			}
 			
 		});
