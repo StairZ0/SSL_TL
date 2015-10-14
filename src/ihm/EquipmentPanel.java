@@ -103,6 +103,7 @@ public class EquipmentPanel extends WebPanel {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				console.clear();
+				
 				SwingWorker worker = new SwingWorker(){
 
 					@Override
