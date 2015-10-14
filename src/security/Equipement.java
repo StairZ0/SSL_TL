@@ -1,6 +1,7 @@
 package security;
 import java.security.PublicKey;
 import java.security.Security;
+import java.util.ArrayList;
 
 public class Equipement {
 
@@ -9,6 +10,8 @@ public class Equipement {
 	private Certificat monCert; // Le certificat auto-signe.
 	private String monNom; // Identite de l’equipement.
 	private int monPort; // Le numéro de port d’ecoute.
+	private ArrayList<CertificateAuthority> ca = new ArrayList<CertificateAuthority>();
+	private ArrayList<DerivateAuthority> da = new ArrayList<DerivateAuthority>();
 
 	public Equipement (String nom, int port) throws Exception {
 		monNom=nom;
