@@ -50,12 +50,12 @@ public class Server {
 		}
 	}
 	
-	public void getString(){
+	public String getString(){
 		try {
 			String res = (String) ois.readObject();
-			System.out.println(res);
+			return res;
 		} catch (Exception e) {
-			// Gestion des exceptions
+			return "Exception";
 		}
 	}
 	

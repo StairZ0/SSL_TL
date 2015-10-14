@@ -3,6 +3,9 @@ import java.security.PublicKey;
 import java.security.Security;
 import java.util.ArrayList;
 
+import javax.swing.JOptionPane;
+
+import main.Main;
 import sockets.Client;
 import sockets.Server;
 
@@ -72,11 +75,35 @@ public class Equipement {
 		return s;
 	}
 	
-	public Client createClient(int port){
-		Client c = new Client(port, this.monNom);
+	public Client createClient(){
+		Client c = new Client(monPort, this.monNom);
 		c.createSocket();
 		c.createStreams();
 		return c;
+	}
+	public void insertAsServer(Server s)
+	{
+		String idNameDistantEq = s.getString();
+		
+		Object[] options = {"Yes",
+		                    "No"
+		                    };
+		int n = JOptionPane.showOptionDialog(Main.frame,
+		    "Would you like to insert equipment "
+		    + idNameDistantEq,
+		    "Insertion Check",
+		    JOptionPane.YES_NO_CANCEL_OPTION,
+		    JOptionPane.QUESTION_MESSAGE,
+		    null,
+		    options,
+		    options[1]);
+		if(n==1)
+		return;
+		
+	}
+	public void insertAsClient(Client c)
+	{
+		c.sendString(monNom);
 	}
 	
 	public void closeServer(Server s){

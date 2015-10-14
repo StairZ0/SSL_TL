@@ -6,9 +6,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
+import javax.swing.SwingWorker;
 
 import net.miginfocom.swing.MigLayout;
 import security.Equipement;
+import sockets.Client;
 import sockets.Server;
 
 import com.alee.laf.button.WebButton;
@@ -22,7 +24,7 @@ public class EquipmentPanel extends WebPanel {
 	private WebPanel header = new WebPanel(new MigLayout("alignx center,aligny center"));
 	private WebPanel toolsPanel = new WebPanel(new MigLayout(""));
 	private WebPanel displayPanel = new WebPanel(new MigLayout(""));
-	private WebTextArea console = new WebTextArea();
+	public static WebTextArea console = new WebTextArea();
 	private WebButton details = new WebButton("Equipment details");
 	private WebButton ca = new WebButton("Certificate Authorities");
 	private WebButton da = new WebButton("Derivate Authorities");
@@ -101,7 +103,20 @@ public class EquipmentPanel extends WebPanel {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				console.clear();
-				eq.createServer();
+				SwingWorker worker = new SwingWorker(){
+
+					@Override
+					protected Object doInBackground() throws Exception {
+						Server s = eq.createServer();
+						eq.insertAsServer(s);
+						eq.closeServer(s);
+						return null;
+					}
+					
+				};
+				worker.execute();
+				
+				
 			}
 			
 		});
@@ -110,8 +125,20 @@ public class EquipmentPanel extends WebPanel {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				console.clear();
-				int port = 0;
-				eq.createClient(port);
+				
+				
+				SwingWorker worker = new SwingWorker(){
+
+					@Override
+					protected Object doInBackground() throws Exception {
+						Client c = eq.createClient();
+						eq.insertAsClient(c);;
+						eq.closeClient(c);
+						return null;
+					}
+					
+				};
+				worker.execute();
 			}
 			
 		});

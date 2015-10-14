@@ -19,14 +19,16 @@ public class Client {
 	public Client(int a, String name){
 		ServerPort = a;
 		ServerName = name;	
+		
 	}
 	
 	public void createSocket (){
 		try {
-			clientSocket = new Socket(ServerName,ServerPort);
+			clientSocket = new Socket("127.0.0.1",ServerPort);
 		} catch (Exception e) {
 			// Gestion des exceptions
 		}
+		
 	}
 	
 	public void createStreams(){
@@ -42,19 +44,19 @@ public class Client {
 	
 	public void sendString (String s){
 		try {
-			oos.writeObject("Bonjour");
+			oos.writeObject(s);
 			oos.flush();
 		} catch (Exception e) {
 			// Gestion des exceptions
 		}
 	}
 	
-	public void receiveString(){
+	public String receiveString(){
 		try {
 			String res = (String) ois.readObject();
-			System.out.println(res);
+			return res;
 		} catch (Exception e) {
-			// Gestion des exceptions
+			return "Exception";
 		}
 	}
 	
