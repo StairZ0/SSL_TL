@@ -33,7 +33,6 @@ public class Equipement {
 		maCle=new PaireClesRSA();
 		monCert = new Certificat(nom, maCle, port);
 		monCert.x509.verify(maCle.Publique());
-
 	}
 
 
@@ -129,6 +128,7 @@ public class Equipement {
 		}	
 		String distantCert = s.getString();
 		PublicKey distantPubKey = null;
+		
 		try {
 			distantPubKey = PEMUtils.decodePEM(distantCert).x509.getPublicKey();
 		} catch (Exception e) {
@@ -170,6 +170,8 @@ public class Equipement {
 	}
 	public void insertAsClient(Client c)
 	{
+		c.sendPublicKey(maCle.Publique());
+		c.sendCertificate(monCert);
 		c.sendString("insert");
 		
 		String flag = c.receiveString();
@@ -203,6 +205,7 @@ public class Equipement {
 			e.printStackTrace();
 		}	
 		String distantCert = c.receiveString();
+
 		PublicKey distantPubKey = null;
 		try {
 			distantPubKey = PEMUtils.decodePEM(distantCert).x509.getPublicKey();

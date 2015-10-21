@@ -1,8 +1,9 @@
 package security;
 
+import java.io.Serializable;
 import java.security.PublicKey;
 
-public class DerivateAuthority {
+public class DerivateAuthority implements Serializable{
 	
 	private String idName;
 	private PublicKey pubk;

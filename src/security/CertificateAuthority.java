@@ -1,5 +1,6 @@
 package security;
 
+import java.io.Serializable;
 import java.security.PublicKey;
 
 
@@ -15,6 +16,10 @@ public class CertificateAuthority {
 		this.idName=idName;
 		this.cert=cert;
 		this.pubk=pubk;
+	}
+	public CertificateAuthority()
+	{
+		
 	}
 	
 	@Override

@@ -2,6 +2,7 @@ package security;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.Serializable;
 import java.math.BigInteger;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -39,7 +40,7 @@ import org.bouncycastle.asn1.x509.V3TBSCertificateGenerator;
 import org.bouncycastle.jce.provider.X509CertificateObject;
 import org.bouncycastle.x509.X509V1CertificateGenerator;
 
-public class Certificat {
+public class Certificat implements Serializable{
 
 	static private BigInteger seqnum = BigInteger.ZERO;
 	public X509Certificate x509;
@@ -48,7 +49,6 @@ public class Certificat {
 	public Certificat(String nom, PaireClesRSA cle,int validityDays) throws IOException, NoSuchAlgorithmException, InvalidKeyException, SignatureException, CertificateParsingException, CertificateEncodingException, IllegalStateException, NoSuchProviderException
 	{
 		
-	
 		PublicKey pubkey = cle.Publique();
 		PrivateKey privkey = cle.Privee();
 		

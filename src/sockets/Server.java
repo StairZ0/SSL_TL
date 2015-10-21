@@ -6,7 +6,9 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.security.PublicKey;
 
+import security.Certificat;
 import security.Equipement;
 
 public class Server {
@@ -65,6 +67,42 @@ public class Server {
 			oos.flush();
 		} catch (Exception e) {
 			// Gestion des exceptions
+		}
+	}
+	public void sendCertificate(Certificat o)
+	{
+		try{
+			oos.writeObject(o);
+			oos.flush();
+		} catch (Exception e) {
+			
+		}
+	}
+	public Certificat receiveCertificate()
+	{
+		try {
+			Certificat res = (Certificat) ois.readObject();
+			return res;
+		} catch (Exception e) {
+			return null;
+		}
+	}
+	public void sendPublicKey(PublicKey o)
+	{
+		try{
+			oos.writeObject(o);
+			oos.flush();
+		} catch (Exception e) {
+			
+		}
+	}
+	public PublicKey receivePublicKey()
+	{
+		try {
+			PublicKey res = (PublicKey) ois.readObject();
+			return res;
+		} catch (Exception e) {
+			return null;
 		}
 	}
 	
