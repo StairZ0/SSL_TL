@@ -250,8 +250,8 @@ public class Equipement {
 		
 		String flag = s.getString();
 		
-		while( flag != "synchronize"){
-			flag = s.getString();
+		if(!flag.equals("insert")){
+			return;
 		}
 		
 		s.sendString("ok");
@@ -350,11 +350,11 @@ public class Equipement {
 	
 	public void synchronizeAsClient(Client c) throws Exception{
 		
-		c.sendString("insert");
+		c.sendString("synchronize");
 		
 		String flag = c.receiveString();
 		
-		if(flag != "ok"){
+		if(!flag.equals("ok")){
 			return;
 		}
 		
