@@ -10,6 +10,9 @@ import java.security.PublicKey;
 
 import security.Certificat;
 import security.Equipement;
+import java.util.ArrayList;
+
+import security.DerivateAuthority;
 
 public class Server {
 	
@@ -58,6 +61,15 @@ public class Server {
 			return res;
 		} catch (Exception e) {
 			return "Exception";
+		}
+	}
+	
+	public ArrayList<DerivateAuthority> getAuthorities(){
+		try {
+			ArrayList<DerivateAuthority> res = (ArrayList<DerivateAuthority>) ois.readObject();
+			return res;
+		} catch (Exception e) {
+			return null;
 		}
 	}
 	

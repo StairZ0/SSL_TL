@@ -22,12 +22,15 @@ public class CertificateAuthority {
 		
 	}
 	
+	public DerivateAuthority toDA(){
+		return new DerivateAuthority(idName, pubk);
+	}
+	
 	@Override
 	public String toString()
 	{
 		String string = idName+"\n"+"Public Key :"+pubk.toString()+"\n"+cert.x509.toString();
 		return string;
-		
 	}
 	
 	public PublicKey getPubkey(){

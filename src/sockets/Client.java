@@ -9,6 +9,11 @@ import java.security.PublicKey;
 
 import security.Certificat;
 
+import java.util.ArrayList;
+import security.DerivateAuthority;
+
+
+
 public class Client {
 	
 	private int ServerPort = 0;
@@ -48,6 +53,15 @@ public class Client {
 	public void sendString (String s){
 		try {
 			oos.writeObject(s);
+			oos.flush();
+		} catch (Exception e) {
+			// Gestion des exceptions
+		}
+	}
+	
+	public void sendAuthorities(ArrayList<DerivateAuthority> da){
+		try {
+			oos.writeObject(da);
 			oos.flush();
 		} catch (Exception e) {
 			// Gestion des exceptions
