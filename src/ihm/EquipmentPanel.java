@@ -64,7 +64,7 @@ public class EquipmentPanel extends WebPanel {
 		toolsPanel.add(ca,"wrap");
 		toolsPanel.add(da,"wrap");
 		toolsPanel.add(insertServer,"wrap");
-		toolsPanel.add(insertClient);
+		toolsPanel.add(insertClient, "wrap");
 		toolsPanel.add(synchronizeServer,"wrap");
 		toolsPanel.add(synchronizeClient);
 		
