@@ -114,7 +114,7 @@ public class Equipement {
 	public void insertAsServer(Server s)
 	{
 		
-		String flag = s.getString();
+		String flag = s.receiveString();
 		
 		if(!flag.equals("insert")){
 			return;
@@ -122,7 +122,7 @@ public class Equipement {
 		
 		s.sendString("ok");
 		
-		String idNameDistantEq = s.getString();
+		String idNameDistantEq = s.receiveString();
 		EquipmentPanel.console.clear();
 		EquipmentPanel.console.append(socketLogs);
 		String log = "Insertion request received from equipment "+idNameDistantEq+"\n";
@@ -253,7 +253,7 @@ public class Equipement {
 	
 	public void synchronizeAsServer(Server s) throws Exception{
 		
-		String flag = s.getString();
+		String flag = s.receiveString();
 		
 		if(!flag.equals("synchronize")){
 			return;
@@ -263,7 +263,7 @@ public class Equipement {
 		//	Exchanging name and Pubkey with the client
 		
 		s.sendString(monNom);
-		String idNameDistantEq = s.getString();
+		String idNameDistantEq = s.receiveString();
 		
 		
 		s.sendPublicKey(maCle.Publique());
@@ -316,17 +316,16 @@ public class Equipement {
 		// If it is in DA but not CA we certificate the key if if neither, we try to find a common link
 		
 		if(!inCA){
+			Certificat newCert = new Certificat(monNom, cPubkey, maCle.Privee(), 365 );
 			
 			if(inDA)
 			{	
-				log = "Distant client is trusted \n";
+				log = "Distant server is trusted \n";
 				EquipmentPanel.console.append(log);
 				socketLogs+=log;
-				CertificateAuthority newCert = new CertificateAuthority(idNameDistantEq, new Certificat(idNameDistantEq, cPubkey, maCle.Privee(), 365 ), cPubkey);
-				ca.add(newCert);
 				da.remove(indexDA);
 				s.sendString("ok");
-				String flag2 = s.getString();
+				String flag2 = s.receiveString();
 				
 				if(!flag2.equals("ok"))
 				{
@@ -366,6 +365,12 @@ public class Equipement {
 					
 					s.sendCertificate(commonAuthority.getCert());
 				}
+				s.sendString("ok");
+				s.receiveString();
+				s.sendCertificate(newCert);
+				Certificat distantCert = s.receiveCertificate();
+				CertificateAuthority newCa = new CertificateAuthority(idNameDistantEq, distantCert, cPubkey);
+				this.ca.add(newCa);
 				
 				
 			}
@@ -375,7 +380,7 @@ public class Equipement {
 				EquipmentPanel.console.append(log);
 				socketLogs+=log;
 				s.sendString("verify");
-				s.getString();
+				s.receiveString();
 				log = "Sending Authorities \n";
 				EquipmentPanel.console.append(log);
 				socketLogs+=log;
@@ -412,6 +417,13 @@ public class Equipement {
 				log = "Certificate verified, sync started \n";
 				EquipmentPanel.console.append(log);
 				socketLogs+=log;
+				s.sendString("ok");
+				s.receiveString();
+				s.sendCertificate(newCert);
+				Certificat distantCert = s.receiveCertificate();
+				CertificateAuthority newCa = new CertificateAuthority(idNameDistantEq, distantCert, cPubkey);
+				this.ca.add(newCa);
+				
 				
 			}
 			
@@ -447,7 +459,7 @@ public class Equipement {
 		s.sendAuthorities(authorities);
 		ArrayList<DerivateAuthority> cAuthorities = s.getAuthorities();
 		
-		
+	
 		
 		// Then we synchronize our datas with the union of CA and DA from both
 		
@@ -544,14 +556,13 @@ public class Equipement {
 		// If it is in DA but not CA we certificate the key if if neither, we try to find a common link
 		
 		if(!inCA){
+			Certificat newCert = new Certificat(monNom, cPubkey, maCle.Privee(), 365 );
 			
 			if(inDA)
 			{	
 				log = "Distant server is trusted \n";
 				EquipmentPanel.console.append(log);
 				socketLogs+=log;
-				CertificateAuthority newCert = new CertificateAuthority(idNameDistantEq, new Certificat(idNameDistantEq, cPubkey, maCle.Privee(), 365 ), cPubkey);
-				ca.add(newCert);
 				da.remove(indexDA);
 				c.sendString("ok");
 				String flag2 = c.receiveString();
@@ -594,6 +605,12 @@ public class Equipement {
 					
 					c.sendCertificate(commonAuthority.getCert());
 				}
+				c.sendString("ok");
+				c.receiveString();
+				c.sendCertificate(newCert);
+				Certificat distantCert = c.receiveCertificate();
+				CertificateAuthority newCa = new CertificateAuthority(idNameDistantEq, distantCert, cPubkey);
+				this.ca.add(newCa);
 				
 				
 			}
@@ -640,6 +657,13 @@ public class Equipement {
 				log = "Certificate verified, sync started \n";
 				EquipmentPanel.console.append(log);
 				socketLogs+=log;
+				c.sendString("ok");
+				c.receiveString();
+				c.sendCertificate(newCert);
+				Certificat distantCert = c.receiveCertificate();
+				CertificateAuthority newCa = new CertificateAuthority(idNameDistantEq, distantCert, cPubkey);
+				this.ca.add(newCa);
+				
 				
 			}
 			

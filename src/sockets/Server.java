@@ -10,6 +10,7 @@ import java.security.PublicKey;
 
 import security.Certificat;
 import security.Equipement;
+
 import java.util.ArrayList;
 
 import security.DerivateAuthority;
@@ -55,7 +56,7 @@ public class Server {
 		}
 	}
 	
-	public String getString(){
+	public String receiveString(){
 		try {
 			String res = (String) ois.readObject();
 			return res;
