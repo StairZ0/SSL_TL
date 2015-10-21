@@ -29,6 +29,6 @@ public class PEMUtils {
 	    parser.close();
 
 	    JcaX509CertificateConverter conv = new JcaX509CertificateConverter();
-	    return new Certificat(conv.getCertificate(holder)); 
+	    return null; 
 	}
 }

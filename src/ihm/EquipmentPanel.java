@@ -34,10 +34,12 @@ public class EquipmentPanel extends WebPanel {
 	private WebButton synchronizeClient = new WebButton("Synchronize as Client");
 	
 	
+	
 	public EquipmentPanel(Equipement eq)
 	{
 		this.eq=eq;
 		//this.setBackground(Color.black);
+		console.setLineWrap(true);
 		buildLayout();
 		buildListeners();
 	}
@@ -79,8 +81,7 @@ public class EquipmentPanel extends WebPanel {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				console.clear();
-				console.setText(eq.monCertif().x509.toString());
+				eq.affichage();
 				
 			}
 			
@@ -89,7 +90,7 @@ public class EquipmentPanel extends WebPanel {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				// TODO Auto-generated method stub
+				eq.affichage_ca();
 				
 			}
 			
@@ -98,7 +99,7 @@ public class EquipmentPanel extends WebPanel {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				// TODO Auto-generated method stub
+				eq.affichage_da();
 				
 			}
 			
@@ -107,7 +108,7 @@ public class EquipmentPanel extends WebPanel {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				console.clear();
+				
 				
 				SwingWorker worker = new SwingWorker(){
 
@@ -116,11 +117,13 @@ public class EquipmentPanel extends WebPanel {
 						Server s = eq.createServer();
 						eq.insertAsServer(s);
 						eq.closeServer(s);
+						
 						return null;
 					}
 					
 				};
 				worker.execute();
+				
 				
 				
 			}
@@ -130,7 +133,7 @@ public class EquipmentPanel extends WebPanel {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				console.clear();
+				
 				
 				
 				SwingWorker worker = new SwingWorker(){
@@ -140,6 +143,7 @@ public class EquipmentPanel extends WebPanel {
 						Client c = eq.createClient();
 						eq.insertAsClient(c);;
 						eq.closeClient(c);
+						
 						return null;
 					}
 					
@@ -152,7 +156,7 @@ public class EquipmentPanel extends WebPanel {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				console.clear();
+				
 				
 				SwingWorker worker = new SwingWorker(){
 
@@ -175,7 +179,7 @@ public class EquipmentPanel extends WebPanel {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				console.clear();
+				
 				
 				
 				SwingWorker worker = new SwingWorker(){

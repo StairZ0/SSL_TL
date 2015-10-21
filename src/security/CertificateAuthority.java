@@ -14,7 +14,7 @@ public class CertificateAuthority {
 	public CertificateAuthority(String idName,Certificat cert,PublicKey pubk)
 	{
 		this.idName=idName;
-		this.cert=cert;
+		this.setCert(cert);
 		this.pubk=pubk;
 	}
 	public CertificateAuthority()
@@ -29,7 +29,7 @@ public class CertificateAuthority {
 	@Override
 	public String toString()
 	{
-		String string = idName+"\n"+"Public Key :"+pubk.toString()+"\n"+cert.x509.toString();
+		String string = idName+"\n"+"Public Key :"+pubk.toString()+"\n";
 		return string;
 	}
 	
@@ -39,6 +39,12 @@ public class CertificateAuthority {
 	
 	public String getIdName(){
 		return idName;
+	}
+	public Certificat getCert() {
+		return cert;
+	}
+	public void setCert(Certificat cert) {
+		this.cert = cert;
 	}
 	
 

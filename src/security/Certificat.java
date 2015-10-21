@@ -13,6 +13,7 @@ import java.security.SecureRandom;
 import java.security.Signature;
 import java.security.SignatureException;
 import java.security.cert.CertificateEncodingException;
+import java.security.cert.CertificateException;
 import java.security.cert.CertificateParsingException;
 import java.security.cert.X509Certificate;
 import java.util.Calendar;
@@ -44,11 +45,12 @@ public class Certificat implements Serializable{
 
 	static private BigInteger seqnum = BigInteger.ZERO;
 	public X509Certificate x509;
+	private String nom;
 
 	@SuppressWarnings({ "deprecation", "resource" })
 	public Certificat(String nom, PaireClesRSA cle,int validityDays) throws IOException, NoSuchAlgorithmException, InvalidKeyException, SignatureException, CertificateParsingException, CertificateEncodingException, IllegalStateException, NoSuchProviderException
 	{
-		
+		this.setNom(nom);
 		PublicKey pubkey = cle.Publique();
 		PrivateKey privkey = cle.Privee();
 		
@@ -79,6 +81,7 @@ public class Certificat implements Serializable{
 	
 	public Certificat(String nom, PublicKey clePublique, PrivateKey clePrivee, int validityDays) throws CertificateEncodingException, InvalidKeyException, IllegalStateException, NoSuchProviderException, NoSuchAlgorithmException, SignatureException{
 		
+		this.setNom(nom);
 		PublicKey pubkey = clePublique;
 		PrivateKey privkey = clePrivee;
 		
@@ -105,10 +108,30 @@ public class Certificat implements Serializable{
 		this.x509= certGen.generate(privkey, "BC");
 	}
 
-	public Certificat(X509Certificate certificate) {
-		seqnum=certificate.getSerialNumber();
-		x509 = certificate;
+	
+
+	public String getNom() {
+		return nom;
 	}
+
+	public void setNom(String nom) {
+		this.nom = nom;
+	}
+	
+	public boolean verify(PublicKey pk)
+	{
+		try {
+			x509.verify(pk);
+		} catch (InvalidKeyException | CertificateException
+				| NoSuchAlgorithmException | NoSuchProviderException
+				| SignatureException e) {
+			// TODO Auto-generated catch block
+			return false;
+		}
+		return true;
+	}
+
+	
 
 
 }
