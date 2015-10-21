@@ -250,28 +250,29 @@ public class Equipement {
 		
 		String flag = s.getString();
 		
-		if(!flag.equals("insert")){
+		if(!flag.equals("synchronize")){
 			return;
 		}
-		
 		s.sendString("ok");
 		
-		//	Exchanging datas with the client
+		//	Exchanging name and Pubkey with the client
 		
 		String idNameDistantEq = s.getString();
 		s.sendString(monNom);
 		
 		PublicKey cPubkey = s.receivePublicKey();
+		s.sendPublicKey(maCle.Publique());
+		
+		EquipmentPanel.console.append("Synchronization with " + idNameDistantEq + "\n");
 		
 		// Need to format the CA to create the authorities list
 		
 		ArrayList<DerivateAuthority> formatCA = new ArrayList<DerivateAuthority>();
-		
+		ArrayList<DerivateAuthority> authorities = new ArrayList<DerivateAuthority>();
+
 		for(CertificateAuthority caEl:ca){
 			formatCA.add( caEl.toDA() );
 		}
-		
-		ArrayList<DerivateAuthority> authorities = new ArrayList<DerivateAuthority>();
 		
 		authorities.addAll(formatCA);
 		authorities.addAll(da);
@@ -281,8 +282,6 @@ public class Equipement {
 		int indexDA = -1;
 		boolean inCA = false;
 		boolean inDA = false;
-		
-		// Test if the machine is in the own ca or da
 		
 		for(int i = 0;i<ca.size();i++){
 			if(ca.get(i).getPubkey().equals(cPubkey) && ca.get(i).getIdName().equals(idNameDistantEq)){
@@ -351,117 +350,102 @@ public class Equipement {
 	public void synchronizeAsClient(Client c) throws Exception{
 		
 		c.sendString("synchronize");
-		
 		String flag = c.receiveString();
-		
 		if(!flag.equals("ok")){
 			return;
 		}
 		
+		// Exchanging name and Pubkey with the server
+		
 		c.sendString(monNom);
-		String idNameDistantEq = c.receiveString();
-		try {
-			c.sendString(PEMUtils.encodePEM(monCert));
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		String idNameDistantEq = c.receiveString();		
 		
-		String cert = c.receiveString();
+		c.sendPublicKey(maCle.Publique());
+		PublicKey cPubkey = c.receivePublicKey();
 		
-		PublicKey cPubkey = null;
-		
-		try{
-			cPubkey = PEMUtils.decodePEM(cert).x509.getPublicKey();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		EquipmentPanel.console.append("Synchronization with " + idNameDistantEq + "\n");
 		
 		// Need to format the CA to create the authorities list
-	
-			ArrayList<DerivateAuthority> formatCA = new ArrayList<DerivateAuthority>();
-			
-			for(CertificateAuthority caEl:ca){
-				formatCA.add( caEl.toDA() );
+
+		ArrayList<DerivateAuthority> formatCA = new ArrayList<DerivateAuthority>();
+		ArrayList<DerivateAuthority> authorities = new ArrayList<DerivateAuthority>();
+		
+		for(CertificateAuthority caEl:ca){
+			formatCA.add( caEl.toDA() );
+		}
+		
+		authorities.addAll(formatCA);
+		authorities.addAll(da);
+		
+		// Start the algorithm
+		
+		int indexDA = -1;
+		boolean inCA = false;
+		boolean inDA = false;
+		
+		for(int i = 0;i<ca.size();i++){
+			if(ca.get(i).getPubkey().equals(cPubkey) && ca.get(i).getIdName().equals(idNameDistantEq)){
+				inCA = true;
 			}
-			
-			ArrayList<DerivateAuthority> authorities = new ArrayList<DerivateAuthority>();
-			
-			authorities.addAll(formatCA);
-			authorities.addAll(da);
-			
-			// Start the algorithm
-			
-			int indexDA = -1;
-			boolean inCA = false;
-			boolean inDA = false;
-			
-			// Test if the machine is in the own ca or da
-			
-			for(int i = 0;i<ca.size();i++){
-				if(ca.get(i).getPubkey().equals(cPubkey) && ca.get(i).getIdName().equals(idNameDistantEq)){
-					inCA = true;
-				}
+		}
+		
+		for(int i = 0;i<da.size();i++){
+			if(da.contains(new DerivateAuthority( idNameDistantEq, cPubkey))){
+				indexDA = i;
+				inDA = true;
 			}
+		}
+		
+		// If it is in DA but not CA we certificate the key if if neither, we try to find a common link
+		
+		if(!inCA){
 			
-			for(int i = 0;i<da.size();i++){
-				if(da.contains(new DerivateAuthority( idNameDistantEq, cPubkey))){
-					indexDA = i;
-					inDA = true;
-				}
-			}
+			if(inDA){
 			
-			// If it is in DA but not CA we certificate the key if if neither, we try to find a common link
-			
-			if(!inCA){
+				CertificateAuthority newCert = new CertificateAuthority(idNameDistantEq, new Certificat(idNameDistantEq, cPubkey, maCle.Privee(), 365 ), cPubkey);
+				ca.add(newCert);
+				da.remove(indexDA);
 				
-				if(inDA){
+			}else{ 
+				ArrayList<DerivateAuthority> cCA = c.receiveAuthorities();
 				
-					CertificateAuthority newCert = new CertificateAuthority(idNameDistantEq, new Certificat(idNameDistantEq, cPubkey, maCle.Privee(), 365 ), cPubkey);
-					ca.add(newCert);
-					da.remove(indexDA);
-					
-				}else{ 
-					ArrayList<DerivateAuthority> cCA = c.receiveAuthorities();
-					
-					// test if there is a common Authority and test the certif
-					
-				}
+				// test if there is a common Authority and test the certif
 				
 			}
-			
-			// Need to send the CA if not trusted by the remote correspondant
-			
-			// When trusted : Send the ca and da
-			
-			c.sendAuthorities(authorities);
-			
-			ArrayList<DerivateAuthority> cAuthorities = c.receiveAuthorities();
-			
-			// Then we synchronize our datas with the union of CA and DA from both
-			
-			boolean isIn = false;
-			
-			for(int i = 0;i<cAuthorities.size();i++){
-				
-				isIn = false;
-				
-				for(int j = 0;j<authorities.size();j++){
-					
-					if(cAuthorities.get(i).getIdName().equals(authorities.get(j).getIdName())
-						&& cAuthorities.get(i).getPubkey().equals(authorities.get(i).getPubkey())){
-						isIn = true;
-					}
-				}
-				
-				if(!isIn){
-					da.add(new DerivateAuthority(cAuthorities.get(i).getIdName(), cAuthorities.get(i).getPubkey()));
-				}
-				
-			}		
 			
 		}
+		
+		// Need to send the CA if not trusted by the remote correspondant
+		
+		// When trusted : Send the ca and da
+		
+		c.sendAuthorities(authorities);
+		
+		ArrayList<DerivateAuthority> cAuthorities = c.receiveAuthorities();
+		
+		// Then we synchronize our datas with the union of CA and DA from both
+		
+		boolean isIn = false;
+		
+		for(int i = 0;i<cAuthorities.size();i++){
+			
+			isIn = false;
+			
+			for(int j = 0;j<authorities.size();j++){
+				
+				if(cAuthorities.get(i).getIdName().equals(authorities.get(j).getIdName())
+					&& cAuthorities.get(i).getPubkey().equals(authorities.get(i).getPubkey())){
+					isIn = true;
+				}
+			}
+			
+			if(!isIn){
+				da.add(new DerivateAuthority(cAuthorities.get(i).getIdName(), cAuthorities.get(i).getPubkey()));
+			}
+			
+		}		
+		
+	}
 
 	
 	

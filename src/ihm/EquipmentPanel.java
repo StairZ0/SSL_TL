@@ -28,8 +28,11 @@ public class EquipmentPanel extends WebPanel {
 	private WebButton details = new WebButton("Equipment details");
 	private WebButton ca = new WebButton("Certificate Authorities");
 	private WebButton da = new WebButton("Derivate Authorities");
-	private WebButton server = new WebButton("Insertion as Server");
-	private WebButton client = new WebButton("Insertion as Client");
+	private WebButton insertServer = new WebButton("Insertion as Server");
+	private WebButton insertClient = new WebButton("Insertion as Client");
+	private WebButton synchronizeServer = new WebButton("Synchronize as Server");
+	private WebButton synchronizeClient = new WebButton("Synchronize as Client");
+	
 	
 	public EquipmentPanel(Equipement eq)
 	{
@@ -60,8 +63,10 @@ public class EquipmentPanel extends WebPanel {
 		toolsPanel.add(details,"wrap");
 		toolsPanel.add(ca,"wrap");
 		toolsPanel.add(da,"wrap");
-		toolsPanel.add(server,"wrap");
-		toolsPanel.add(client);
+		toolsPanel.add(insertServer,"wrap");
+		toolsPanel.add(insertClient);
+		toolsPanel.add(synchronizeServer,"wrap");
+		toolsPanel.add(synchronizeClient);
 		
 		
 		console.setBackground(Color.black);
@@ -98,7 +103,7 @@ public class EquipmentPanel extends WebPanel {
 			}
 			
 		});
-		server.addActionListener(new ActionListener(){
+		insertServer.addActionListener(new ActionListener(){
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -121,7 +126,7 @@ public class EquipmentPanel extends WebPanel {
 			}
 			
 		});
-		client.addActionListener(new ActionListener(){
+		insertClient.addActionListener(new ActionListener(){
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -134,6 +139,51 @@ public class EquipmentPanel extends WebPanel {
 					protected Object doInBackground() throws Exception {
 						Client c = eq.createClient();
 						eq.insertAsClient(c);;
+						eq.closeClient(c);
+						return null;
+					}
+					
+				};
+				worker.execute();
+			}
+			
+		});
+		synchronizeServer.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				console.clear();
+				
+				SwingWorker worker = new SwingWorker(){
+
+					@Override
+					protected Object doInBackground() throws Exception {
+						Server s = eq.createServer();
+						eq.synchronizeAsServer(s);
+						eq.closeServer(s);
+						return null;
+					}
+					
+				};
+				worker.execute();
+				
+				
+			}
+			
+		});
+		synchronizeClient.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				console.clear();
+				
+				
+				SwingWorker worker = new SwingWorker(){
+
+					@Override
+					protected Object doInBackground() throws Exception {
+						Client c = eq.createClient();
+						eq.synchronizeAsClient(c);;
 						eq.closeClient(c);
 						return null;
 					}
