@@ -93,8 +93,8 @@ public class Equipement {
 		
 		String flag = s.getString();
 		
-		while( flag != "insert"){
-			flag = s.getString();
+		if(!flag.equals("insert")){
+			return;
 		}
 		
 		s.sendString("ok");
@@ -120,21 +120,22 @@ public class Equipement {
 		return;
 		
 		EquipmentPanel.console.append("Insertion checked by user, begin to trade certificates \n");
-		try {
-			s.sendString(PEMUtils.encodePEM(monCert));
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}	
-		String distantCert = s.getString();
-		PublicKey distantPubKey = null;
+		s.sendPublicKey(maCle.Publique());
+//		try {
+//			s.sendString(PEMUtils.encodePEM(monCert));
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}	
+		//String distantCert = s.getString();
+		PublicKey distantPubKey = s.receivePublicKey();
 		
-		try {
-			distantPubKey = PEMUtils.decodePEM(distantCert).x509.getPublicKey();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//		try {
+//			distantPubKey = PEMUtils.decodePEM(distantCert).x509.getPublicKey();
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		EquipmentPanel.console.append("Received Public Key :"+distantPubKey.toString()+"\n");
 		Certificat certPubKDistant = null;
 		try {
@@ -145,21 +146,22 @@ public class Equipement {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		try {
-			s.sendString(PEMUtils.encodePEM(certPubKDistant));
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//		try {
+//			s.sendString(PEMUtils.encodePEM(certPubKDistant));
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+		s.sendCertificate(certPubKDistant);
 		EquipmentPanel.console.append("Public key was certified and sent \n");
-		String CA = s.getString();
-		Certificat certCa = null;
-		try {
-			certCa = PEMUtils.decodePEM(CA);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		//String CA = s.getString();
+		Certificat certCa = s.receiveCertificate();
+//		try {
+//			certCa = PEMUtils.decodePEM(CA);
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		EquipmentPanel.console.append("Certificate received : \n"+certCa.toString());
 		CertificateAuthority receivedCA = new CertificateAuthority(idNameDistantEq, certCa, distantPubKey);
 		ca.add(receivedCA);
@@ -170,13 +172,12 @@ public class Equipement {
 	}
 	public void insertAsClient(Client c)
 	{
-		c.sendPublicKey(maCle.Publique());
-		c.sendCertificate(monCert);
+		
 		c.sendString("insert");
 		
 		String flag = c.receiveString();
 		
-		if(flag != "ok"){
+		if(!flag.equals("ok")){
 			return;
 		}
 		
@@ -198,21 +199,22 @@ public class Equipement {
 		if(n==1)
 		return;
 		EquipmentPanel.console.append("Insertion checked by user, begin to trade certificates \n");
-		try {
-			c.sendString(PEMUtils.encodePEM(monCert));
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}	
-		String distantCert = c.receiveString();
-
-		PublicKey distantPubKey = null;
-		try {
-			distantPubKey = PEMUtils.decodePEM(distantCert).x509.getPublicKey();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		c.sendPublicKey(maCle.Publique());
+//		try {
+//			s.sendString(PEMUtils.encodePEM(monCert));
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}	
+		//String distantCert = s.getString();
+		PublicKey distantPubKey = c.receivePublicKey();
+		
+//		try {
+//			distantPubKey = PEMUtils.decodePEM(distantCert).x509.getPublicKey();
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		EquipmentPanel.console.append("Received Public Key :"+distantPubKey.toString()+"\n");
 		Certificat certPubKDistant = null;
 		try {
@@ -223,21 +225,22 @@ public class Equipement {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		try {
-			c.sendString(PEMUtils.encodePEM(certPubKDistant));
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//		try {
+//			s.sendString(PEMUtils.encodePEM(certPubKDistant));
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+		c.sendCertificate(certPubKDistant);
 		EquipmentPanel.console.append("Public key was certified and sent \n");
-		String CA = c.receiveString();
-		Certificat certCa = null;
-		try {
-			certCa = PEMUtils.decodePEM(CA);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		//String CA = s.getString();
+		Certificat certCa = c.receiveCertificate();
+//		try {
+//			certCa = PEMUtils.decodePEM(CA);
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		EquipmentPanel.console.append("Certificate received : \n"+certCa.toString());
 		CertificateAuthority receivedCA = new CertificateAuthority(idNameDistantEq, certCa, distantPubKey);
 		ca.add(receivedCA);
