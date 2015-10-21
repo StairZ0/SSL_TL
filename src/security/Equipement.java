@@ -20,10 +20,10 @@ import utils.PEMUtils;
 public class Equipement {
 
 
-	private PaireClesRSA maCle; // La paire de cle de lâ€™equipement.
+	private PaireClesRSA maCle; // La paire de cle de lÃ¢â‚¬â„¢equipement.
 	private Certificat monCert; // Le certificat auto-signe.
-	private String monNom; // Identite de lâ€™equipement.
-	private int monPort; // Le numÃ©ro de port dâ€™ecoute.
+	private String monNom; // Identite de lÃ¢â‚¬â„¢equipement.
+	private int monPort; // Le numÃƒÂ©ro de port dÃ¢â‚¬â„¢ecoute.
 	private ArrayList<CertificateAuthority> ca = new ArrayList<CertificateAuthority>();
 	private ArrayList<DerivateAuthority> da = new ArrayList<DerivateAuthority>();
 
@@ -93,8 +93,8 @@ public class Equipement {
 		
 		String flag = s.getString();
 		
-		while( flag != "insert"){
-			flag = s.getString();
+		if(!flag.equals("insert")){
+			return;
 		}
 		
 		s.sendString("ok");
@@ -120,21 +120,22 @@ public class Equipement {
 		return;
 		
 		EquipmentPanel.console.append("Insertion checked by user, begin to trade certificates \n");
-		try {
-			s.sendString(PEMUtils.encodePEM(monCert));
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}	
-		String distantCert = s.getString();
-		PublicKey distantPubKey = null;
+		s.sendPublicKey(maCle.Publique());
+//		try {
+//			s.sendString(PEMUtils.encodePEM(monCert));
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}	
+		//String distantCert = s.getString();
+		PublicKey distantPubKey = s.receivePublicKey();
 		
-		try {
-			distantPubKey = PEMUtils.decodePEM(distantCert).x509.getPublicKey();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//		try {
+//			distantPubKey = PEMUtils.decodePEM(distantCert).x509.getPublicKey();
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		EquipmentPanel.console.append("Received Public Key :"+distantPubKey.toString()+"\n");
 		Certificat certPubKDistant = null;
 		try {
@@ -145,21 +146,22 @@ public class Equipement {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		try {
-			s.sendString(PEMUtils.encodePEM(certPubKDistant));
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//		try {
+//			s.sendString(PEMUtils.encodePEM(certPubKDistant));
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+		s.sendCertificate(certPubKDistant);
 		EquipmentPanel.console.append("Public key was certified and sent \n");
-		String CA = s.getString();
-		Certificat certCa = null;
-		try {
-			certCa = PEMUtils.decodePEM(CA);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		//String CA = s.getString();
+		Certificat certCa = s.receiveCertificate();
+//		try {
+//			certCa = PEMUtils.decodePEM(CA);
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		EquipmentPanel.console.append("Certificate received : \n"+certCa.toString());
 		CertificateAuthority receivedCA = new CertificateAuthority(idNameDistantEq, certCa, distantPubKey);
 		ca.add(receivedCA);
@@ -170,13 +172,12 @@ public class Equipement {
 	}
 	public void insertAsClient(Client c)
 	{
-		c.sendPublicKey(maCle.Publique());
-		c.sendCertificate(monCert);
+		
 		c.sendString("insert");
 		
 		String flag = c.receiveString();
 		
-		if(flag != "ok"){
+		if(!flag.equals("ok")){
 			return;
 		}
 		
@@ -198,21 +199,22 @@ public class Equipement {
 		if(n==1)
 		return;
 		EquipmentPanel.console.append("Insertion checked by user, begin to trade certificates \n");
-		try {
-			c.sendString(PEMUtils.encodePEM(monCert));
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}	
-		String distantCert = c.receiveString();
-
-		PublicKey distantPubKey = null;
-		try {
-			distantPubKey = PEMUtils.decodePEM(distantCert).x509.getPublicKey();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		c.sendPublicKey(maCle.Publique());
+//		try {
+//			s.sendString(PEMUtils.encodePEM(monCert));
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}	
+		//String distantCert = s.getString();
+		PublicKey distantPubKey = c.receivePublicKey();
+		
+//		try {
+//			distantPubKey = PEMUtils.decodePEM(distantCert).x509.getPublicKey();
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		EquipmentPanel.console.append("Received Public Key :"+distantPubKey.toString()+"\n");
 		Certificat certPubKDistant = null;
 		try {
@@ -223,21 +225,22 @@ public class Equipement {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		try {
-			c.sendString(PEMUtils.encodePEM(certPubKDistant));
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//		try {
+//			s.sendString(PEMUtils.encodePEM(certPubKDistant));
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+		c.sendCertificate(certPubKDistant);
 		EquipmentPanel.console.append("Public key was certified and sent \n");
-		String CA = c.receiveString();
-		Certificat certCa = null;
-		try {
-			certCa = PEMUtils.decodePEM(CA);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		//String CA = s.getString();
+		Certificat certCa = c.receiveCertificate();
+//		try {
+//			certCa = PEMUtils.decodePEM(CA);
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		EquipmentPanel.console.append("Certificate received : \n"+certCa.toString());
 		CertificateAuthority receivedCA = new CertificateAuthority(idNameDistantEq, certCa, distantPubKey);
 		ca.add(receivedCA);
@@ -255,67 +258,23 @@ public class Equipement {
 		
 		//	Exchanging datas with the client
 		
-		// The idName
-		
 		String idNameDistantEq = s.getString();
 		s.sendString(monNom);
 		
-		// The certificate for cPubkey
+		PublicKey cPubkey = s.receivePublicKey();
 		
-		String cert = s.getString();
+		// Need to format the CA to create the authorities list
 		
-		try {
-			s.sendString(PEMUtils.encodePEM(monCert));
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		ArrayList<DerivateAuthority> formatCA = new ArrayList<DerivateAuthority>();
+		
+		for(CertificateAuthority caEl:ca){
+			formatCA.add( caEl.toDA() );
 		}
 		
-		PublicKey cPubkey = null;
+		ArrayList<DerivateAuthority> authorities = new ArrayList<DerivateAuthority>();
 		
-		try{
-			cPubkey = PEMUtils.decodePEM(cert).x509.getPublicKey();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		// Need to format the CA, cast in string, send and create union  -----------------------------------------------------------------------------------------------------------------------------
-		
-		String formatCA = "";
-		
-		String formatDA = "";
-		
-		ArrayList<DerivateAuthority> union = new ArrayList<DerivateAuthority>();
-		
-		// Send the ca and da
-		
-		String cFormatCA = s.getString();
-		
-		try {
-			s.sendString(formatCA);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		String cFormatDA = s.getString();
-		
-		try {
-			s.sendString(formatDA);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		// Reformat the received CA and DA  -------------------------------------------------------------------------------------------------------------------------------------
-		
-		ArrayList<DerivateAuthority> cda = new ArrayList<DerivateAuthority>();
-		ArrayList<DerivateAuthority> cca = new ArrayList<DerivateAuthority>();
-		
-		// We use these to create the union  -------------------------------------------------------------------------------------------------------------------------------------
-		
-		ArrayList<DerivateAuthority> cUnion = new ArrayList<DerivateAuthority>();
+		authorities.addAll(formatCA);
+		authorities.addAll(da);
 		
 		// Start the algorithm
 		
@@ -326,7 +285,7 @@ public class Equipement {
 		// Test if the machine is in the own ca or da
 		
 		for(int i = 0;i<ca.size();i++){
-			if(ca.get(i).getPubkey() == cPubkey && ca.get(i).getIdName() == idNameDistantEq){
+			if(ca.get(i).getPubkey().equals(cPubkey) && ca.get(i).getIdName().equals(idNameDistantEq)){
 				inCA = true;
 			}
 		}
@@ -348,30 +307,41 @@ public class Equipement {
 				ca.add(newCert);
 				da.remove(indexDA);
 				
-			}else{ // -------------------------------------------------------------------------------------------------------------------------------------
+			}else{ 
+				ArrayList<DerivateAuthority> cCA = s.getAuthorities();
+				
+				// test if there is a common Authority and test the certif
 				
 			}
 			
 		}
 		
+		// Need to send the CA if not trusted by the remote correspondant
+		
+		// When trusted : Send the ca and da
+		
+		ArrayList<DerivateAuthority> cAuthorities = s.getAuthorities();
+		
+		s.sendAuthorities(authorities);
+		
 		// Then we synchronize our datas with the union of CA and DA from both
 		
 		boolean isIn = false;
 		
-		for(int i = 0;i<cUnion.size();i++){
+		for(int i = 0;i<cAuthorities.size();i++){
 			
 			isIn = false;
 			
-			for(int j = 0;j<union.size();j++){
+			for(int j = 0;j<authorities.size();j++){
 				
-				if(cUnion.get(i).getIdName() == union.get(j).getIdName()
-					&& cUnion.get(i).getPubkey() == union.get(i).getPubkey()){
+				if(cAuthorities.get(i).getIdName().equals(authorities.get(j).getIdName())
+					&& cAuthorities.get(i).getPubkey().equals(authorities.get(i).getPubkey())){
 					isIn = true;
 				}
 			}
 			
 			if(!isIn){
-				da.add(new DerivateAuthority(cUnion.get(i).getIdName(), cUnion.get(i).getPubkey()));
+				da.add(new DerivateAuthority(cAuthorities.get(i).getIdName(), cAuthorities.get(i).getPubkey()));
 			}
 			
 		}		
@@ -408,104 +378,91 @@ public class Equipement {
 			e.printStackTrace();
 		}
 		
-		// Need to format the CA, cast in string, send and create union  ------------------------------------------------------------------------------------------------------------------------------
-		
-		String formatCA = "";
-		
-		String formatDA = "";
-		
-		ArrayList<DerivateAuthority> union = new ArrayList<DerivateAuthority>();
-		
-		// Send the ca and da
-		
-		try {
-			c.sendString(formatCA);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		String cFormatCA = c.receiveString();
-		
-		try {
-			c.sendString(formatDA);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		String cFormatDA = c.receiveString();
-		
-		// Reformat the received CA and DA -------------------------------------------------------------------------------------------------------------------------------------
-		
-		ArrayList<DerivateAuthority> cda = new ArrayList<DerivateAuthority>();
-		ArrayList<DerivateAuthority> cca = new ArrayList<DerivateAuthority>();
-		
-		// We use these to create the union -------------------------------------------------------------------------------------------------------------------------------------
-		
-		ArrayList<DerivateAuthority> cUnion = new ArrayList<DerivateAuthority>();
-		
-		// Start the algorithm
-		
-		int indexDA = -1;
-		boolean inCA = false;
-		boolean inDA = false;
-		
-		// Test if the machine is in the own ca or da
-		
-		for(int i = 0;i<ca.size();i++){
-			if(ca.get(i).getPubkey() == cPubkey && ca.get(i).getIdName() == idNameDistantEq){
-				inCA = true;
-			}
-		}
-		
-		for(int i = 0;i<da.size();i++){
-			if(da.contains(new DerivateAuthority( idNameDistantEq, cPubkey))){
-				indexDA = i;
-				inDA = true;
-			}
-		}
-		
-		// If it is in DA but not CA we certificate the key if if neither, we try to find a common link
-		
-		if(!inCA){
+		// Need to format the CA to create the authorities list
+	
+			ArrayList<DerivateAuthority> formatCA = new ArrayList<DerivateAuthority>();
 			
-			if(inDA){
-			
-				CertificateAuthority newCert = new CertificateAuthority(idNameDistantEq, new Certificat(idNameDistantEq, cPubkey, maCle.Privee(), 365 ), cPubkey);
-				ca.add(newCert);
-				da.remove(indexDA);
-				
-			}else{ // -------------------------------------------------------------------------------------------------------------------------------------
-				
+			for(CertificateAuthority caEl:ca){
+				formatCA.add( caEl.toDA() );
 			}
 			
-		}
-		
-		// Then we synchronize our datas with the union of CA and DA from both
-		
-		boolean isIn = false;
-		
-		for(int i = 0;i<cUnion.size();i++){
+			ArrayList<DerivateAuthority> authorities = new ArrayList<DerivateAuthority>();
 			
-			isIn = false;
+			authorities.addAll(formatCA);
+			authorities.addAll(da);
 			
-			for(int j = 0;j<union.size();j++){
-				
-				if(cUnion.get(i).getIdName() == union.get(j).getIdName()
-					&& cUnion.get(i).getPubkey() == union.get(i).getPubkey()){
-					isIn = true;
+			// Start the algorithm
+			
+			int indexDA = -1;
+			boolean inCA = false;
+			boolean inDA = false;
+			
+			// Test if the machine is in the own ca or da
+			
+			for(int i = 0;i<ca.size();i++){
+				if(ca.get(i).getPubkey().equals(cPubkey) && ca.get(i).getIdName().equals(idNameDistantEq)){
+					inCA = true;
 				}
 			}
 			
-			if(!isIn){
-				da.add(new DerivateAuthority(cUnion.get(i).getIdName(), cUnion.get(i).getPubkey()));
+			for(int i = 0;i<da.size();i++){
+				if(da.contains(new DerivateAuthority( idNameDistantEq, cPubkey))){
+					indexDA = i;
+					inDA = true;
+				}
 			}
 			
-		}		
-		
-	}
-	
+			// If it is in DA but not CA we certificate the key if if neither, we try to find a common link
+			
+			if(!inCA){
+				
+				if(inDA){
+				
+					CertificateAuthority newCert = new CertificateAuthority(idNameDistantEq, new Certificat(idNameDistantEq, cPubkey, maCle.Privee(), 365 ), cPubkey);
+					ca.add(newCert);
+					da.remove(indexDA);
+					
+				}else{ 
+					ArrayList<DerivateAuthority> cCA = c.receiveAuthorities();
+					
+					// test if there is a common Authority and test the certif
+					
+				}
+				
+			}
+			
+			// Need to send the CA if not trusted by the remote correspondant
+			
+			// When trusted : Send the ca and da
+			
+			c.sendAuthorities(authorities);
+			
+			ArrayList<DerivateAuthority> cAuthorities = c.receiveAuthorities();
+			
+			// Then we synchronize our datas with the union of CA and DA from both
+			
+			boolean isIn = false;
+			
+			for(int i = 0;i<cAuthorities.size();i++){
+				
+				isIn = false;
+				
+				for(int j = 0;j<authorities.size();j++){
+					
+					if(cAuthorities.get(i).getIdName().equals(authorities.get(j).getIdName())
+						&& cAuthorities.get(i).getPubkey().equals(authorities.get(i).getPubkey())){
+						isIn = true;
+					}
+				}
+				
+				if(!isIn){
+					da.add(new DerivateAuthority(cAuthorities.get(i).getIdName(), cAuthorities.get(i).getPubkey()));
+				}
+				
+			}		
+			
+		}
+
 	
 	
 	public void closeServer(Server s){

@@ -73,6 +73,17 @@ public class Server {
 		}
 	}
 	
+
+	public void sendAuthorities(ArrayList<DerivateAuthority> da)
+	{
+		try{
+			oos.writeObject(da);
+			oos.flush();
+		} catch (Exception e) {
+			
+		}
+	}
+	
 	public void sendString(String s){
 		try {
 			oos.writeObject(s);
@@ -90,6 +101,7 @@ public class Server {
 			
 		}
 	}
+	
 	public Certificat receiveCertificate()
 	{
 		try {

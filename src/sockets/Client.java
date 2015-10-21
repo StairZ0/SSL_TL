@@ -68,6 +68,15 @@ public class Client {
 		}
 	}
 	
+	public ArrayList<DerivateAuthority> receiveAuthorities(){
+		try {
+			ArrayList<DerivateAuthority> res = (ArrayList<DerivateAuthority>) ois.readObject();
+			return res;
+		} catch (Exception e) {
+			return null;
+		}
+	}
+	
 	public String receiveString(){
 		try {
 			String res = (String) ois.readObject();
