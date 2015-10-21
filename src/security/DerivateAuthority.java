@@ -21,5 +21,14 @@ public class DerivateAuthority {
 		return string;
 		
 	}
+	
+	public PublicKey getPubkey(){
+		return pubk;
+	}
+	
+	public String getIdName(){
+		return idName;
+	}
+	
 
 }
