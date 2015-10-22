@@ -1,4 +1,4 @@
-<div style="float:right">Alan Longuet / Ngô-Maï Nicolas</div>
+<div>Alan Longuet / Ngô-Maï Nicolas</div>
 
 <h1>TL cryptographie SIS 2015</h1>
 
