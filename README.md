@@ -1,3 +1,5 @@
+<div style="text-align:justify">
+
 <h1>Rapport de TL cryptographie SIS 2015</h1>
 
 <h4 style="margin-top:20px">Introduction :</h4>
@@ -72,3 +74,5 @@ Le constructeur réalise l’autocertification de l’équipement au moment de s
 Les méthodes d’affichage des informations de l’équipement sont aussi incluses dans cette classe. Les méthodes pour créer un serveur ou un client dans l’application courante sont aussi dans cette classe.
 L’essentiel de la logique du programme se trouve dans les méthodes de synchronisation et d’insertion. Nous avons réalisé deux méthodes pour chacun de ces protocoles, une pour le serveur, l’autre pour le client. Elles contiennent quasiment le même code mais avec des différences au niveau de l’ordre d’envoi des données (en alternance, le client en premier puis le serveur répond).
 </p>
+
+</div>
