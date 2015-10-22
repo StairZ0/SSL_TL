@@ -1,11 +1,11 @@
-Rapport de TL cryptographie SIS 2015
+<h1>Rapport de TL cryptographie SIS 2015</h1>
 
 
-Introduction :
+<h4>Introduction :</h4>
 
 Pour réaliser ce TL, nous avons essayé de faire des choix de conception cohérents pour avoir à la fois une structure logique et organisée, une interface utilisateur agréable à utiliser. Nous avons eu quelques difficultés à comprendre pleinement les tenants et aboutissants du sujet mais nous sommes satisfaits de ce que nous avons réalisés au final. Nous allons ici vous présenter notre code source, les difficultés rencontrées et les conclusions tirées de ce TL.
 
-- I.	Code Source -
+<em>I.	Code Source</em>
 
   1.	Arborescence
 
