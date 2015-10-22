@@ -20,10 +20,10 @@ import utils.PEMUtils;
 public class Equipement {
 
 
-	private PaireClesRSA maCle; // La paire de cle de lÃ¢â‚¬â„¢equipement.
+	private PaireClesRSA maCle; // La paire de cle de lÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢equipement.
 	private Certificat monCert; // Le certificat auto-signe.
-	private String monNom; // Identite de lÃ¢â‚¬â„¢equipement.
-	private int monPort; // Le numÃƒÂ©ro de port dÃ¢â‚¬â„¢ecoute.
+	private String monNom; // Identite de lÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢equipement.
+	private int monPort; // Le numÃƒÆ’Ã‚Â©ro de port dÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ecoute.
 	private ArrayList<CertificateAuthority> ca = new ArrayList<CertificateAuthority>();
 	private ArrayList<DerivateAuthority> da = new ArrayList<DerivateAuthority>();
 	private String socketLogs = "";
@@ -327,6 +327,8 @@ public class Equipement {
 				s.sendString("ok");
 				String flag2 = s.receiveString();
 				
+				// If the correspondant doesn't trust, search a common authority and send the certificate
+				
 				if(!flag2.equals("ok"))
 				{
 					log = "Searching for common authorities \n";
@@ -374,7 +376,7 @@ public class Equipement {
 				
 				
 			}
-			else
+			else	// If the correspondant is not trusted, search a common authority and check its certificate
 			{
 				log = "Distant Client isn't trusted\n";
 				EquipmentPanel.console.append(log);
@@ -429,7 +431,7 @@ public class Equipement {
 			
 							
 		}
-		else
+		else	// If in CA, you have to authenticate your identity 
 		{
 			log = "Distant client is trusted, but auth needed \n";
 			EquipmentPanel.console.append(log);
@@ -452,14 +454,10 @@ public class Equipement {
 			socketLogs+=log;
 		}
 		
-		// Need to send the CA if not trusted by the remote correspondant
-		
-		// When trusted : Send the ca and da
+		// When trusted : Exchange the authorities
 		
 		s.sendAuthorities(authorities);
 		ArrayList<DerivateAuthority> cAuthorities = s.getAuthorities();
-		
-	
 		
 		// Then we synchronize our datas with the union of CA and DA from both
 		
@@ -567,6 +565,8 @@ public class Equipement {
 				c.sendString("ok");
 				String flag2 = c.receiveString();
 				
+				// If the correspondant doesn't trust, search a common authority and send the certificate
+				
 				if(!flag2.equals("ok"))
 				{
 					log = "Searching for common authorities \n";
@@ -614,7 +614,7 @@ public class Equipement {
 				
 				
 			}
-			else
+			else	// If the correspondant is not trusted, search a common authority and check its certificate
 			{
 				log = "Distant Client isn't trusted\n";
 				EquipmentPanel.console.append(log);
@@ -669,7 +669,7 @@ public class Equipement {
 			
 							
 		}
-		else
+		else	// If in CA, you have to authenticate your identity 
 		{
 			log = "Distant client is trusted, but auth needed \n";
 			EquipmentPanel.console.append(log);
@@ -692,14 +692,10 @@ public class Equipement {
 			socketLogs+=log;
 		}
 		
-		// Need to send the CA if not trusted by the remote correspondant
-		
-		// When trusted : Send the ca and da
+		// When trusted : Exchange the authorities
 		
 		c.sendAuthorities(authorities);
 		ArrayList<DerivateAuthority> cAuthorities = c.receiveAuthorities();
-		
-	
 		
 		// Then we synchronize our datas with the union of CA and DA from both
 		
